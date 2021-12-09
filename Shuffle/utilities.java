@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Random;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public abstract class utilities {
@@ -39,4 +41,41 @@ if (categories != "-1") {
             return test;            
 	}		
 	}	
+	public static Restaurant populateRestaurant(String location, String categories, int price) throws IOException {
+		Restaurant restaurantObject = new Restaurant();
+		int rand;
+		Random randNumber = new Random();
+		rand = randNumber.nextInt(20);
+		try {
+			 JSONObject root = getJSON(location, categories, price);
+			 
+			 JSONArray businesses = root.getJSONArray("businesses");
+
+			 JSONObject jsonBusiness = businesses.getJSONObject(rand);
+										
+				restaurantObject.setName(jsonBusiness.getString("name"));
+				restaurantObject.setRating(jsonBusiness.getInt("rating"));
+				restaurantObject.setReview_count(jsonBusiness.getInt("review_count"));
+				restaurantObject.setPhoneNumber(jsonBusiness.getString("display_phone"));
+				restaurantObject.setUrl(jsonBusiness.getString("url"));
+				restaurantObject.setPrice(jsonBusiness.getString("price"));
+
+		} catch (org.json.JSONException e) {
+			JSONObject root = getJSON(location, categories, price);
+			 rand = root.getInt("total");
+			 rand = randNumber.nextInt(rand);
+			 System.out.println(rand);
+			 JSONArray businesses = root.getJSONArray("businesses");
+
+			 JSONObject jsonBusiness = businesses.getJSONObject(rand);
+										
+				restaurantObject.setName(jsonBusiness.getString("name"));
+				restaurantObject.setRating(jsonBusiness.getInt("rating"));
+				restaurantObject.setReview_count(jsonBusiness.getInt("review_count"));
+				restaurantObject.setPhoneNumber(jsonBusiness.getString("display_phone"));
+				restaurantObject.setUrl(jsonBusiness.getString("url"));
+				restaurantObject.setPrice(jsonBusiness.getString("price"));
+		}
+		return restaurantObject;
+	}
 }
