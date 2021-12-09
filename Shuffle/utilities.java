@@ -9,11 +9,11 @@ import org.json.JSONObject;
 
 public abstract class utilities {
 
-	public static JSONObject getJSON(String location, String categories, int price) throws IOException {
+	public static JSONObject getJSON(String location, String categories, String price) throws IOException {
 String url = "https://api.yelp.com/v3/businesses/search?open_now=true&term=food";
 url += "&location=" + location;
 
-if (price != -1) {
+if (Integer.parseInt(price) != -1) {
 	url += "&price=" + price;
 }
 if (categories != "-1") {
@@ -41,7 +41,7 @@ if (categories != "-1") {
             return test;            
 	}		
 	}	
-	public static Restaurant populateRestaurant(String location, String categories, int price) throws IOException {
+	public static Restaurant populateRestaurant(String location, String categories, String price) throws IOException {
 		Restaurant restaurantObject = new Restaurant();
 		int rand;
 		Random randNumber = new Random();
