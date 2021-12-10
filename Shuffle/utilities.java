@@ -9,45 +9,65 @@ import org.json.JSONObject;
 
 public abstract class utilities {
 
-	public static JSONObject getJSON(String location, String categories, String price) throws IOException {
-String url = "https://api.yelp.com/v3/businesses/search?open_now=true&term=food";
-url += "&location=" + location;
-
-if (Integer.parseInt(price) != -1) {
-	url += "&price=" + price;
-}
-if (categories != "-1") {
-	url += "&categories=" + categories;
-}
+	private static JSONObject makeRequest(String location, String categories, String price) throws IOException {
+		// Base url for HTTP request to Yelp API
+		String url = "https://api.yelp.com/v3/businesses/search?open_now=true&term=food";
+		// Concatenate url String with location search query data
+		url += "&location=" + location;
+		// Check for -1 flag
+		try {
+			if (Integer.parseInt(price) != -1 || containsChar(price) == false) {
+				// If String price is in format we like, concatenate our url String with price search query information
+				url += "&price=" + price;
+			}
+		} catch (java.lang.NumberFormatException e) {
+			// TODO: handle exception
+		}
+		
+		// Check for -1 flag
+		if (categories != "-1") {
+			// Concatenate our url String with search categories information if data is valid
+			url += "&categories=" + categories;
+		}
+		//
+		System.err.println("URL being sent to API: " + url);
+		// Send HTTP Request
 		HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+		// Set Request method to GET
 		connection.setRequestMethod("GET");
+		// Set request Header to Bearer and our Yelp API key
 		connection.setRequestProperty("Authorization", "Bearer 4DRYEsEaNvDtwM7yBtS0KaNNLr282Fg0JVe67DrQSpM9ycZHFhZPUrK1-24Y6x-7g9deHjyROXP-w4n0BFMUHP-1EeflzSiBsSGjTOHrW-CvhJUmIfTbfxyUeLWuYXYx");
+		
+		// TODO: fix try & catch for this section, handle exception, possibly remove throws clause
 		
 		//
 		try (BufferedReader in = new BufferedReader(
+				// InputStreamReader to read our JSON from Yelp API
                 new InputStreamReader(connection.getInputStream()))) {
+			// StringBuilder instance to help build our custom String with JSON data
+            StringBuilder stringBuilder = new StringBuilder();
+            String JSONString;
 
-            StringBuilder response = new StringBuilder();
-            String line;
-
-            while ((line = in.readLine()) != null) {
-                response.append(line);            
+            while ((JSONString = in.readLine()) != null) {
+            	stringBuilder.append(JSONString);            
             }            
-            JSONObject test = new JSONObject(response.toString());
+            JSONObject yelpJSONObject = new JSONObject(stringBuilder.toString());
+            // Testing, TODO Delete after
             System.out.println();
-            System.err.println(test);
+            System.err.println(yelpJSONObject);
             // End connection
             connection.disconnect();
-            return test;            
+            // Return JSON object with JSON data packed inside of it from Yelp API request
+            return yelpJSONObject;            
 	}		
 	}	
-	public static Restaurant populateRestaurant(String location, String categories, String price) throws IOException {
+	public static Restaurant parseAndPopulate(String location, String categories, String price) throws IOException {
 		Restaurant restaurantObject = new Restaurant();
 		int rand;
 		Random randNumber = new Random();
 		rand = randNumber.nextInt(20);
 		try {
-			 JSONObject root = getJSON(location, categories, price);
+			 JSONObject root = makeRequest(location, categories, price);
 			 
 			 JSONArray businesses = root.getJSONArray("businesses");
 
@@ -60,11 +80,15 @@ if (categories != "-1") {
 				restaurantObject.setUrl(jsonBusiness.getString("url"));
 				restaurantObject.setPrice(jsonBusiness.getString("price"));
 
-		} catch (org.json.JSONException e) {
-			JSONObject root = getJSON(location, categories, price);
+		}
+		/**
+		 * Catch problem where categories 
+		 */
+		catch (org.json.JSONException e) {
+			JSONObject root = makeRequest(location, categories, price);
 			 rand = root.getInt("total");
-			 rand = randNumber.nextInt(rand);
-			 System.out.println(rand);
+			 rand = randNumber.nextInt(rand/2);
+			 System.err.println(rand);
 			 JSONArray businesses = root.getJSONArray("businesses");
 
 			 JSONObject jsonBusiness = businesses.getJSONObject(rand);
@@ -77,5 +101,13 @@ if (categories != "-1") {
 				restaurantObject.setPrice(jsonBusiness.getString("price"));
 		}
 		return restaurantObject;
+	}
+	private static Boolean containsChar(String str) {
+		for (int i = 0; i < str.length(); i++) {
+			if (Character.isAlphabetic(str.charAt(i))) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
