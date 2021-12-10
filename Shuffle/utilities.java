@@ -62,33 +62,35 @@ public abstract class utilities {
 	}		
 	}	
 	public static Restaurant parseAndPopulate(String location, String categories, String price) throws IOException {
+		// Create instance of Restaurant to be populated later
 		Restaurant restaurantObject = new Restaurant();
 		int rand;
 		Random randNumber = new Random();
 		rand = randNumber.nextInt(20);
 		try {
+			 // Make HTTP request to yelp API, returned JSONObject
 			 JSONObject root = makeRequest(location, categories, price);
-			 
+			 // Enter JSON directory
 			 JSONArray businesses = root.getJSONArray("businesses");
-
+			 // Enter random JSON restaurant entry
 			 JSONObject jsonBusiness = businesses.getJSONObject(rand);
-										
+				
+			 	// Set key information in Restaurant instance
 				restaurantObject.setName(jsonBusiness.getString("name"));
 				restaurantObject.setRating(jsonBusiness.getInt("rating"));
 				restaurantObject.setReview_count(jsonBusiness.getInt("review_count"));
 				restaurantObject.setPhoneNumber(jsonBusiness.getString("display_phone"));
 				restaurantObject.setUrl(jsonBusiness.getString("url"));
 				restaurantObject.setPrice(jsonBusiness.getString("price"));
-
 		}
-		/**
-		 * Catch problem where categories 
-		 */
+		// Catch an issue where too few results are being returned and rand number does not exist in JSON
 		catch (org.json.JSONException e) {
+			// Make new HTTP request
 			JSONObject root = makeRequest(location, categories, price);
+			 // Find int for total amount of restaurants returned
 			 rand = root.getInt("total");
 			 rand = randNumber.nextInt(rand/2);
-			 System.err.println(rand);
+			 System.err.println(rand); // information 
 			 JSONArray businesses = root.getJSONArray("businesses");
 
 			 JSONObject jsonBusiness = businesses.getJSONObject(rand);

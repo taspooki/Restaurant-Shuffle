@@ -14,29 +14,33 @@ public class Main extends utilities {
 
     JOptionPane.showMessageDialog(null, "Welcome To Restaurant Shuffle", "Restaurant Shuffle", 1); //Welcome Message
 		
-		 location = JOptionPane.showInputDialog(null, "Please Type In City or Zip Code To Continue", "Location", 3);//Asks for zip code or city to begin search from user
+		 location = JOptionPane.showInputDialog(null, "Enter a City, Zip Code, or an Address To Continue", "Location", 3);//Asks for zip code or city to begin search from user
 		
 	                 // Stores Input
 		
-	   price =   JOptionPane.showInputDialog(null, "What Price Range Were You Looking For Today?\n Please Enter 1-4 or Leave Blank If No Prefrence.\n 1=$, 2=$$, 3=$$$, 4=$$$$", "Price", 3); //Asks for Price Range
+	   price =   JOptionPane.showInputDialog(null, "What Price Range Were You Looking For Today?\nPlease Enter 1-4 or Leave Blank If No Preference.\n 1=$, 2=$$, 3=$$$, 4=$$$$", "Price", 3); //Asks for Price Range
 	    			//Stores Int
 				 if(price == "") {    
            price = "-1";    //Searches all prices if input is left blank
          }
-				
-	  categories = JOptionPane.showInputDialog(null, "If you would like to search a certain food type please enter type here. \n Multiple can be searched if comma is used. EX: Mexian,Asain", "Category", 3);  //Asks for Category
+		
+		// TODO: Write exception to detect spaces in categories input, if detected, for loop to ELIMINATE THOSE SPACES		 
+	  categories = JOptionPane.showInputDialog(null, "If you would like to search a certain food type please enter type here.\nMultiple can be searched if comma is used. EX: Mexican,Burger,Asian", "Category", 3);  //Asks for Category
 	    			//Stores Input 
-
+	  System.out.println(categories);
         if(categories == ""){
           categories = "-1";  //Searches all categories if input is left blank
         }
     System.err.println(categories);
+    System.out.println(categories);
 
 
     // Populating our restaurant instance
     restaurant = parseAndPopulate(location, categories, price);
     
+    // Print out to console information about Restaurant
     System.out.println(restaurant.getName());
+    System.out.println(restaurant.getPrice());
 		
 	}
 }
