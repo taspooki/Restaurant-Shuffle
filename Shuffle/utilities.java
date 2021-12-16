@@ -62,7 +62,7 @@ public abstract class utilities {
 		// Set Request method to GET
 		connection.setRequestMethod("GET");
 		// Set request Header to Bearer and our Yelp API key
-		connection.setRequestProperty("Authorization", "Bearer 4DRYEsEaNvDtwM7yBtS0KaNNLr282Fg0JVe67DrQSpM9ycZHFhZPUrK1-24Y6x-7g9deHjyROXP-w4n0BFMUHP-1EeflzSiBsSGjTOHrW-CvhJUmIfTbfxyUeLWuYXYx");
+		connection.setRequestProperty("Authorization", "Bearer " + key);
 		
 		 // InputStreamReader to read our JSON from Yelp API
 		 BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
