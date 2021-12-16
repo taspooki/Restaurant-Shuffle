@@ -1,2 +1,3 @@
 # Restaurant-Shuffle
-Provide program with some key information and get back details about a random restaurant.
+A Java program to provide user with a random restaurant in their area.
+User may also enter price range they desire ($,$$,$$$,$$$), and categories of food they want.
