@@ -17,7 +17,7 @@ public class Restaurant {
 		this.review_count = -1;
 }
 
-	// Getters and setters
+	// Getters and setters for each data type
 
 	public String getPrice() {
 		return price;
